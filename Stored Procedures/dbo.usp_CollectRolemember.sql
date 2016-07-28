@@ -1,8 +1,11 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE Procedure [dbo].[usp_CollectRolemember] As
+CREATE Procedure [dbo].[usp_CollectRolemember] AS
+
+/*Adding do nothing comment as part of GitHub testing*/
 
 Declare @Return bit; Set @Return = 0
 Declare @DbName nvarchar(255)

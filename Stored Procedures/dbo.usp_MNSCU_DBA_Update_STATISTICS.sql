@@ -1,3 +1,4 @@
+
 SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
@@ -10,7 +11,8 @@ CREATE PROCEDURE [dbo].[usp_MNSCU_DBA_Update_STATISTICS]
 	, @mailrecipients NVARCHAR(500)								/* Who to send error message to, as needed */
 	, @SystemDB BIT = 1											/* Include system databases?  Default True*/
 
-AS/*
+AS
+/*
 	
 	Name:  usp_MNSCU_DBA_Update_STATISTICS
 
@@ -30,6 +32,7 @@ AS/*
     Date        Initials	Version Description
     ----------------------------------------------------------------------------
 	2016-07-08	DMZ			1.0		Inital Release
+							1.1		Updates
 	*********************************************************************************
     Example of how to call this script:
 
@@ -112,7 +115,7 @@ WHILE @@FETCH_STATUS = 0
 						')		' +
 				'SELECT DISTINCT ' +	
 					'DB_NAME(DB_ID()) , ' +
-					'OBJECT_NAME(s.[object_id]), ' +
+					'OBJECT_SCHEMA_NAME(s.object_id) + ''' + '.' + ''' + OBJECT_NAME(s.[object_id]), ' +	
 					's.name AS StatName ' +
 					'FROM sys.stats s ' +
 					'JOIN sys.stats_columns sc ON sc.[object_id] = s.[object_id] AND sc.stats_id = s.stats_id ' +
@@ -157,7 +160,7 @@ WHILE @@FETCH_STATUS = 0
 			END
 
 		SET @datetimeSTART = GETDATE()
-		SET @ssql = 'USE [' +  @databasename + '] UPDATE STATISTICS ' +  @tablename + ' ' + @Statsname + ' WITH FULLSCAN'
+		SET @ssql = 'USE [' +  @databasename + '] UPDATE STATISTICS ' +  @tablename + ' [' + @Statsname + '] WITH FULLSCAN'
 		        
 		IF @printCMD = 1 PRINT @ssql
 		IF @executeSQL = 1 EXECUTE sp_executesql @ssql
